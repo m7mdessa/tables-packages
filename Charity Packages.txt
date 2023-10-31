@@ -1,0 +1,1149 @@
+Pages_PACKAGE
+
+
+CREATE OR REPLACE PACKAGE Pages_PACKAGE AS
+PROCEDURE GetAllPages;
+PROCEDURE AddHomePage(p_title IN VARCHAR, p_slide1 IN VARCHAR, p_slide2 IN VARCHAR, p_slide3 IN VARCHAR, p_content IN VARCHAR, p_logo IN VARCHAR, p_Email IN VARCHAR,p_Phone IN VARCHAR, p_Location IN VARCHAR);
+PROCEDURE UpdateHomePage(p_id IN NUMBER,p_title IN VARCHAR, p_slide1 IN VARCHAR, p_slide2 IN VARCHAR, p_slide3 IN VARCHAR, p_content IN VARCHAR, p_logo IN VARCHAR, p_Email IN VARCHAR,p_Phone IN VARCHAR, p_Location IN VARCHAR);
+PROCEDURE AddAboutPage(p_title IN VARCHAR, p_slide1 IN VARCHAR, p_content IN VARCHAR);
+PROCEDURE UpdateAboutPage(p_id IN NUMBER,p_title IN VARCHAR, p_slide1 IN VARCHAR, p_content IN VARCHAR);
+PROCEDURE AddContactPage(p_title IN VARCHAR, p_Email IN VARCHAR,p_Phone IN VARCHAR, p_Location IN VARCHAR);
+PROCEDURE UpdateContactPage(p_id IN NUMBER,p_title IN VARCHAR, p_Email IN VARCHAR,p_Phone IN VARCHAR,p_Location IN VARCHAR);
+PROCEDURE DeletePage(p_id IN NUMBER);
+PROCEDURE GetPageByTitle(p_Title IN VARCHAR);
+END Pages_PACKAGE;
+
+create or replace PACKAGE BODY Pages_PACKAGE
+As
+PROCEDURE GetAllPages
+As
+p_all sys_refcursor;
+BEGIN 
+OPEN p_all for
+SELECT * from CHARITY_Pages;
+DBMS_SQL.RETURN_RESULT(p_all);
+END GetAllPages;
+
+
+PROCEDURE AddHomePage(p_title IN VARCHAR, p_slide1 IN VARCHAR, p_slide2 IN VARCHAR, p_slide3 IN VARCHAR, p_content IN VARCHAR, p_logo IN VARCHAR, p_Email IN VARCHAR,p_Phone IN VARCHAR, p_Location IN VARCHAR)
+IS
+BEGIN 
+INSERT INTO CHARITY_Pages (Title, slide1,slide2,slide3,content,logo,Email,Phone,Location)
+VALUES(p_Title,p_slide1,p_slide2,p_slide3,p_content,p_logo,p_Email,p_Phone,p_Location);
+COMMIT;
+END AddHomePage;
+
+
+PROCEDURE UpdateHomePage(p_id IN NUMBER,p_title IN VARCHAR, p_slide1 IN VARCHAR, p_slide2 IN VARCHAR, p_slide3 IN VARCHAR, p_content IN VARCHAR, p_logo IN VARCHAR, p_Email IN VARCHAR,p_Phone IN VARCHAR, p_Location IN VARCHAR)
+IS
+BEGIN
+UPDATE CHARITY_Pages SET Title = p_Title, slide1 = p_slide1 , slide2 = p_slide2, slide3 = p_slide3, content = p_content, logo = p_logo, Email = p_Email ,Phone  = p_Phone ,Location = p_Location 
+WHERE ID = p_id;
+COMMIT;
+END UpdateHomePage;
+
+PROCEDURE AddAboutPage(p_title IN VARCHAR, p_slide1 IN VARCHAR, p_content IN VARCHAR)
+IS
+BEGIN 
+INSERT INTO CHARITY_Pages (Title, slide1,content)
+VALUES(p_Title,p_slide1,p_content);
+COMMIT;
+END AddAboutPage;
+
+
+PROCEDURE UpdateAboutPage(p_id IN NUMBER,p_title IN VARCHAR, p_slide1 IN VARCHAR, p_content IN VARCHAR)
+IS
+BEGIN
+UPDATE CHARITY_Pages SET Title = p_Title, slide1 = p_slide1 , content = p_content
+WHERE ID = p_id;
+COMMIT;
+END UpdateAboutPage;
+
+PROCEDURE AddContactPage(p_title IN VARCHAR, p_Email IN VARCHAR,p_Phone IN VARCHAR, p_Location IN VARCHAR)
+IS
+BEGIN 
+INSERT INTO CHARITY_Pages (Title, email,phone,Location)
+VALUES(p_Title,p_Email,p_Phone,p_Location);
+COMMIT;
+END AddContactPage;
+
+
+PROCEDURE UpdateContactPage(p_id IN NUMBER,p_title IN VARCHAR, p_Email IN VARCHAR,p_Phone IN VARCHAR,p_Location IN VARCHAR)
+IS
+BEGIN
+UPDATE CHARITY_Pages SET Title = p_Title, Email = p_Email , Phone = p_Phone ,Location = p_Location
+WHERE ID = p_id;
+COMMIT;
+END UpdateContactPage;
+
+PROCEDURE DeletePage(p_id IN NUMBER)
+IS
+BEGIN
+DELETE CHARITY_Pages WHERE ID = p_id;
+COMMIT;
+END DeletePage;
+
+
+  PROCEDURE GetPageByTitle(p_Title IN VARCHAR)
+AS
+p_all sys_refcursor;
+BEGIN
+OPEN p_all FOR
+SELECT * FROM CHARITY_Pages WHERE Title = p_Title;
+DBMS_SQL.RETURN_RESULT(p_all);
+END GetPageByTitle;
+END Pages_PACKAGE;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Users_Package
+
+set SERVEROUTPUT on ; 
+CREATE OR REPLACE PACKAGE Users_Package AS
+PROCEDURE GetAllUsers;
+PROCEDURE CreateUser(u_name IN VARCHAR, u_email IN VARCHAR, pass IN VARCHAR);
+PROCEDURE UpdateUser(u_id IN NUMBER, u_name IN VARCHAR);
+PROCEDURE DeleteUser(u_id IN NUMBER);
+PROCEDURE GetUserById(u_id IN NUMBER);
+END Users_Package;
+
+create or replace PACKAGE BODY Users_Package
+As
+PROCEDURE GetAllUsers
+As
+u_all sys_refcursor;
+BEGIN 
+OPEN u_all for
+SELECT * from CHARITY_USER;
+DBMS_SQL.RETURN_RESULT(u_all);
+END GetAllUsers;
+
+PROCEDURE CreateUser(u_name IN VARCHAR, u_email IN VARCHAR, pass IN VARCHAR)
+IS
+u_roleid  NUMBER;
+BEGIN 
+u_roleid := 2;
+
+INSERT INTO CHARITY_USER (username, EMAIL, PASSWORD, ROLEID)
+VALUES(u_name,u_email,pass,u_roleid);
+COMMIT;
+END CreateUser;
+
+
+PROCEDURE UpdateUser(u_id IN NUMBER, u_name IN VARCHAR)
+IS
+BEGIN
+UPDATE CHARITY_USER SET  username = u_name WHERE ID = u_id;
+COMMIT;
+END UpdateUser;
+
+PROCEDURE DeleteUser(u_id IN NUMBER)
+IS
+BEGIN
+DELETE CHARITY_USER WHERE ID = u_id;
+COMMIT;
+END DeleteUser;
+
+
+PROCEDURE GetUserById(u_id IN NUMBER)
+AS
+u_all sys_refcursor;
+BEGIN
+OPEN u_all FOR
+SELECT * FROM CHARITY_USER WHERE ID = u_id;
+DBMS_SQL.RETURN_RESULT(u_all);
+END GetUserById;
+
+END Users_Package;
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Category_Package
+
+CREATE OR REPLACE PACKAGE Category_Package AS
+PROCEDURE GetAllCategories;
+PROCEDURE CreateCategory(c_name IN VARCHAR, c_image IN VARCHAR);
+PROCEDURE UpdateCategory(c_id IN NUMBER,c_name IN VARCHAR, c_image IN VARCHAR);
+PROCEDURE DeleteCategory(c_id IN NUMBER);
+PROCEDURE GetCategoryById(c_id IN NUMBER);
+END Category_Package;
+
+create or replace PACKAGE BODY Category_Package
+As
+PROCEDURE GetAllCategories
+As
+c_all sys_refcursor;
+BEGIN 
+OPEN c_all for
+SELECT * from CHARITY_CATEGORY;
+DBMS_SQL.RETURN_RESULT(c_all);
+END GetAllCategories;
+
+
+PROCEDURE CreateCategory(c_name IN VARCHAR, c_image IN VARCHAR)
+IS
+BEGIN 
+INSERT INTO CHARITY_CATEGORY (CATEGORYNAME, IMAGE)
+VALUES(c_name,c_image);
+COMMIT;
+END CreateCategory;
+
+
+PROCEDURE UpdateCategory(c_id IN NUMBER,c_name IN VARCHAR, c_image IN VARCHAR)
+IS
+BEGIN
+UPDATE CHARITY_CATEGORY SET CATEGORYNAME = c_name, IMAGE = c_image
+WHERE ID = c_id;
+COMMIT;
+END UpdateCategory;
+
+
+
+PROCEDURE DeleteCategory(c_id IN NUMBER)
+IS
+BEGIN
+DELETE CHARITY_CATEGORY WHERE ID = c_id;
+COMMIT;
+END DeleteCategory;
+
+
+  PROCEDURE GetCategoryById(c_id IN NUMBER)
+AS
+c_all sys_refcursor;
+BEGIN
+OPEN c_all FOR
+SELECT * FROM CHARITY_CATEGORY WHERE ID = c_id;
+DBMS_SQL.RETURN_RESULT(c_all);
+END GetCategoryById;
+END Category_Package;
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Charity_Package
+
+
+
+
+CREATE OR REPLACE PACKAGE Charity_Package AS
+PROCEDURE GetAllCharities;
+PROCEDURE GetCharityByUserId(u_id IN NUMBER);
+PROCEDURE CreateCharity(c_name IN VARCHAR,c_latitude IN decimal,c_longitude IN decimal, c_mission IN VARCHAR,c_address IN VARCHAR , cat_id IN NUMBER, u_id IN NUMBER,c_image IN VARCHAR,c_g_price IN decimal,c_m_price IN decimal);
+PROCEDURE UpdateCharity(c_id IN NUMBER, c_status IN VARCHAR,c_price IN DECIMAL);
+PROCEDURE DeleteCharity(c_id IN NUMBER);
+PROCEDURE GetCharityById(c_id IN NUMBER);
+PROCEDURE GetCharityByCategory(c_id IN NUMBER);
+
+END Charity_Package;
+
+create or replace PACKAGE BODY Charity_Package
+As
+PROCEDURE GetAllCharities
+As
+ch_all sys_refcursor;
+BEGIN 
+OPEN ch_all FOR
+        SELECT
+            ch.Id,
+            ch.charityname,
+            ch.image,
+            ch.status,
+            ch.latitude,
+            ch.longitude,
+            ch.mission,
+            ch.price,   
+            ch.minprice,
+            ch.goalprice,
+            ch.CREATEDDATE,
+            ch.totalprice,
+            cu.username AS username,
+            cu.email AS email,
+            cc.categoryname as categoryname            
+        FROM Charity ch
+        
+        
+        JOIN Charity_User cu ON ch.Userid = cu.Id 
+        JOIN Charity_Category cc ON ch.categoryid = cc.id;
+DBMS_SQL.RETURN_RESULT(ch_all);
+END GetAllCharities;
+
+PROCEDURE GetCharityByUserId(u_id IN NUMBER)
+As
+ch_all sys_refcursor;
+BEGIN 
+OPEN ch_all FOR
+        SELECT
+            ch.Id,
+            ch.charityname,
+            ch.image,
+            ch.status,
+            ch.latitude,
+            ch.longitude,
+            ch.mission,
+            ch.price,   
+            ch.minprice,
+            ch.goalprice,
+            ch.CREATEDDATE,
+            ch.totalprice,
+            cu.username AS username,
+            cu.email AS email,
+            cc.categoryname as categoryname            
+        FROM Charity ch
+        
+        
+        JOIN Charity_User cu ON ch.Userid = cu.Id 
+        JOIN Charity_Category cc ON ch.categoryid = cc.id
+        WHERE ch.Userid = u_id;
+
+DBMS_SQL.RETURN_RESULT(ch_all);
+END GetCharityByUserId;
+
+PROCEDURE CreateCharity(c_name IN VARCHAR,c_latitude IN decimal,c_longitude IN decimal, c_mission IN VARCHAR,c_address IN VARCHAR,cat_id IN NUMBER, u_id IN NUMBER,c_image IN VARCHAR,c_g_price IN decimal,c_m_price IN decimal)
+
+IS
+    c_status VARCHAR2(255);
+    c_price DECIMAL;
+BEGIN 
+
+  c_status := 'Pending';
+  c_price := null;
+
+
+INSERT INTO Charity (CHARITYNAME,latitude,longitude, Mission,Address, STATUS, CATEGORYID,userid,image,price ,CREATEDDATE, GOALPRICE,MINPRICE)
+VALUES(c_name, c_latitude,c_longitude,c_mission,c_address, c_status, cat_id,u_id,c_image,c_price,SYSDATE,c_g_price,c_m_price );
+
+COMMIT;
+END CreateCharity;
+
+
+PROCEDURE UpdateCharity(c_id IN NUMBER, c_status IN VARCHAR,c_price IN DECIMAL)
+IS
+u_id number ;
+
+BEGIN
+select userid into  u_id from Charity  WHERE ID = c_id ;
+
+        IF c_status = 'Accepted' THEN
+
+           UPDATE Charity SET  STATUS=c_status , price = c_price WHERE ID = c_id;
+           DELETE FROM CHARITY_NOTIFICATION  WHERE userid = u_id;
+           
+          ELSIF c_status = 'Rejected' THEN
+        
+            DELETE FROM Charity WHERE ID = c_id;
+            
+            DELETE FROM CHARITY_NOTIFICATION  WHERE userid = u_id;
+            
+            END IF;
+COMMIT;
+END UpdateCharity;
+
+
+
+PROCEDURE DeleteCharity(c_id IN NUMBER)
+IS
+BEGIN
+DELETE Charity WHERE ID = c_id;
+COMMIT;
+END DeleteCharity;
+
+
+PROCEDURE GetCharityById(c_id IN NUMBER)
+AS
+ch_all sys_refcursor;
+BEGIN
+OPEN ch_all FOR
+SELECT * FROM Charity WHERE ID = c_id;
+DBMS_SQL.RETURN_RESULT(ch_all);
+END GetCharityById;
+
+PROCEDURE GetCharityByCategory(c_id IN NUMBER)
+ AS
+    ch_all sys_refcursor;
+BEGIN
+    OPEN ch_all FOR
+        SELECT
+            ch.Id,
+            ch.charityname,
+            ch.image,
+            ch.status,
+            ch.latitude,
+            ch.longitude,
+            ch.mission,
+            ch.price,
+            ch.minprice,
+            ch.goalprice,
+            ch.CREATEDDATE,
+            ch.totalprice,
+            cu.username AS username,
+            cu.email AS email,
+            cc.categoryname AS categoryname
+        FROM Charity ch
+        JOIN Charity_Category cc ON ch.categoryid = cc.id
+        JOIN Charity_User cu ON ch.userid = cu.id
+        WHERE ch.categoryid = c_id; 
+
+    DBMS_SQL.RETURN_RESULT(ch_all);
+END GetCharityByCategory;
+
+
+END Charity_Package;
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Testimonial_Package
+
+CREATE OR REPLACE PACKAGE Testimonial_Package AS
+PROCEDURE GetAllTestimonials;
+PROCEDURE GetTestimonialByUserId(t_user_id IN NUMBER);
+PROCEDURE CreateTestimonial(u_testimonial IN VARCHAR, t_user_id IN NUMBER );
+PROCEDURE UpdateTestimonial(t_id IN NUMBER, t_status IN VARCHAR);
+PROCEDURE DeleteTestimonial(t_id IN NUMBER);
+PROCEDURE GetTestimonialById(t_id IN NUMBER);
+
+END Testimonial_Package;
+
+create or replace PACKAGE BODY Testimonial_Package 
+As
+PROCEDURE GetAllTestimonials
+As
+t_all sys_refcursor;
+BEGIN 
+OPEN t_all for
+
+    SELECT  
+      ct.Id,
+      ct.testimonial,
+      ct.datetestimonial,
+      ct.status,
+      cu.username,    
+      cu.image
+    FROM CHARITY_TESTIMONIAL ct
+    JOIN Charity_user cu ON ct.Userid = cu.id;
+DBMS_SQL.RETURN_RESULT(t_all);
+END GetAllTestimonials;
+
+PROCEDURE GetTestimonialByUserId(t_user_id IN NUMBER)
+AS
+  ch_all sys_refcursor;
+BEGIN
+  OPEN ch_all FOR
+    SELECT  
+      ct.Id,
+      ct.testimonial,
+      ct.datetestimonial,
+      ct.status,
+      cu.username,    
+      cu.image
+    FROM CHARITY_TESTIMONIAL ct
+    JOIN Charity_user cu ON ct.Userid = cu.id
+    WHERE ct.Userid = t_user_id;
+
+  DBMS_SQL.RETURN_RESULT(ch_all);
+END GetTestimonialByUserId;
+
+ PROCEDURE CreateTestimonial( u_testimonial IN VARCHAR , t_user_id IN NUMBER)
+IS
+    t_notification VARCHAR2(255);
+    t_status VARCHAR2(255);
+
+BEGIN 
+
+  t_notification :=   'new testimonial';
+  t_status := 'Pending';
+
+    INSERT INTO CHARITY_NOTIFICATION(NOTIFICATION, NOTIFICATIONDATE, USERID)
+    VALUES (t_notification, SYSDATE, t_user_id);
+
+INSERT INTO CHARITY_TESTIMONIAL(TESTIMONIAL , STATUS, USERID, DATETESTIMONIAL)
+VALUES(u_testimonial ,t_status, t_user_id, SYSDATE);
+COMMIT;
+END CreateTestimonial;
+
+
+PROCEDURE UpdateTestimonial(t_id IN NUMBER, t_status IN VARCHAR)
+IS
+u_id number ;
+BEGIN 
+select userid into  u_id from CHARITY_TESTIMONIAL  WHERE ID = t_id ;
+
+        IF t_status = 'Accepted' THEN
+
+           UPDATE CHARITY_TESTIMONIAL SET  STATUS= t_status WHERE ID = t_id;
+           
+           DELETE FROM CHARITY_NOTIFICATION  WHERE userid = u_id;
+           
+        ELSIF t_status = 'Rejected' THEN
+        
+            DELETE FROM CHARITY_TESTIMONIAL WHERE ID = t_id;
+            
+            DELETE FROM CHARITY_NOTIFICATION  WHERE userid = u_id;
+            
+            END IF;
+
+COMMIT;
+END UpdateTestimonial;
+
+PROCEDURE DeleteTestimonial(t_id IN NUMBER)
+IS
+BEGIN
+DELETE CHARITY_TESTIMONIAL WHERE ID = t_id;
+COMMIT;
+END DeleteTestimonial;
+
+
+PROCEDURE GetTestimonialById(t_id IN NUMBER)
+AS
+ch_all sys_refcursor;
+BEGIN
+OPEN ch_all FOR
+SELECT * FROM CHARITY_TESTIMONIAL WHERE ID = t_id;
+DBMS_SQL.RETURN_RESULT(ch_all);
+END GetTestimonialById;
+
+
+
+END Testimonial_Package;
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Issues_Package
+CREATE OR REPLACE PACKAGE Issues_Package AS
+PROCEDURE GetAllIssue;
+PROCEDURE GetIssueByUserId(u_id IN NUMBER);
+PROCEDURE CreateIssue(u_id IN Number, i_description IN VARCHAR);
+PROCEDURE UpdateIssue(i_id IN NUMBER, i_response IN VARCHAR, i_status IN VARCHAR);
+PROCEDURE DeleteIssue(i_id IN NUMBER);
+PROCEDURE GetIssueById(i_id IN NUMBER);
+PROCEDURE GetUserEmail (i_id in number);
+
+END Issues_Package;
+
+
+create or replace PACKAGE BODY Issues_Package
+As
+
+PROCEDURE GetAllIssue AS
+    i_all sys_refcursor;
+BEGIN
+    OPEN i_all FOR
+        SELECT
+            ci.Id,
+            ci.Issuedescription,
+            ci.Datereported,
+            ci.status,
+            ci.response,
+            cu.username AS username
+        FROM CHARITY_ISSUE ci
+        JOIN Charity_user cu ON ci.Userid = cu.Id;
+    
+    DBMS_SQL.RETURN_RESULT(i_all);
+END GetAllIssue;
+
+PROCEDURE GetIssueByUserId(u_id IN NUMBER)
+AS
+i_all sys_refcursor;
+BEGIN
+OPEN i_all FOR
+SELECT
+            ci.Id,
+            ci.Issuedescription,
+            ci.Datereported,
+            ci.status,
+            ci.response,
+            cu.username AS username
+        FROM CHARITY_ISSUE ci
+        JOIN Charity_user cu ON ci.Userid = cu.Id
+ WHERE ci.USERID = u_id;
+DBMS_SQL.RETURN_RESULT(i_all);
+END GetIssueByUserId;
+
+PROCEDURE CreateIssue(u_id IN Number, i_description IN VARCHAR)
+IS
+    i_notification VARCHAR2(255);
+    i_status VARCHAR2(255);
+BEGIN 
+  i_notification :='you have received new issue';
+  i_status := 'Pending';
+
+    INSERT INTO CHARITY_NOTIFICATION(NOTIFICATION, NOTIFICATIONDATE, USERID)
+    VALUES (i_notification, SYSDATE, u_id);
+INSERT INTO CHARITY_ISSUE (USERID, ISSUEDESCRIPTION , DATEREPORTED, STATUS)
+VALUES(u_id , i_description , SYSDATE , i_status);
+COMMIT;
+END CreateIssue;
+
+
+PROCEDURE UpdateIssue(i_id IN NUMBER, i_response IN VARCHAR, i_status IN VARCHAR)
+IS
+u_id number ;
+BEGIN
+
+select userid into  u_id from CHARITY_ISSUE  WHERE ID = i_id ;
+
+        IF i_status = 'Responded' THEN
+            UPDATE CHARITY_ISSUE SET STATUS = i_status ,response = i_response 
+            
+            WHERE ID = i_id;
+            
+            DELETE FROM CHARITY_NOTIFICATION  WHERE userid = u_id;
+    
+            
+            END IF;
+        
+    COMMIT;
+
+END UpdateIssue;
+
+
+PROCEDURE DeleteIssue(i_id IN NUMBER)
+IS
+BEGIN
+DELETE CHARITY_ISSUE WHERE ID = i_id;
+COMMIT;
+END DeleteIssue;
+
+
+PROCEDURE GetIssueById(i_id IN NUMBER)
+AS
+i_all sys_refcursor;
+BEGIN
+OPEN i_all FOR
+SELECT * FROM CHARITY_ISSUE WHERE ID = i_id;
+DBMS_SQL.RETURN_RESULT(i_all);
+END GetIssueById;
+
+END Issues_Package;
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Contact_Package
+
+
+CREATE OR REPLACE PACKAGE Contact_Package AS
+PROCEDURE GetAllContact;
+PROCEDURE CreateContact(c_name IN VARCHAR ,c_email IN VARCHAR, c_phone IN VARCHAR, c_subject IN VARCHAR, c_message IN VARCHAR );
+PROCEDURE DeleteContact(c_id IN NUMBER);
+END Contact_Package;
+
+create or replace PACKAGE BODY Contact_Package
+As
+
+PROCEDURE GetAllContact
+As
+ch_all sys_refcursor;
+BEGIN 
+OPEN ch_all for
+SELECT * from Charity_Contact;
+DBMS_SQL.RETURN_RESULT(ch_all);
+END GetAllContact;
+
+PROCEDURE CreateContact(c_name IN VARCHAR,c_email IN VARCHAR, c_phone IN VARCHAR, c_subject IN VARCHAR, c_message IN VARCHAR)
+IS
+BEGIN 
+INSERT INTO Charity_Contact (Contactname,email , phone , subject , message, datecreated)
+VALUES(c_name,c_email , c_phone , c_subject ,c_message, sysdate);
+COMMIT;
+END CreateContact;
+
+PROCEDURE DeleteContact(c_id IN NUMBER)
+IS
+BEGIN
+DELETE Charity_Contact WHERE ID = c_id;
+COMMIT;
+END DeleteContact;
+
+END Contact_Package;
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Admin_Package 
+
+CREATE OR REPLACE PACKAGE Admin_Package AS
+PROCEDURE UpdateAdmin(a_id IN NUMBER, pass IN VARCHAR);
+PROCEDURE FindCategoryWithMaxCharities;
+PROCEDURE GetNumberOfCharities ;
+PROCEDURE GetNumberOfNotifications;
+PROCEDURE GetNumberOfUsers;
+PROCEDURE GetAllNotifications;
+PROCEDURE GetAllDonations; 
+PROCEDURE SerchBetweenDates( DateFrom in date , DateTo in date);
+PROCEDURE Reports;
+PROCEDURE ReportsInterval ( p_start_date IN DATE,  p_end_date IN DATE);
+PROCEDURE benefits;
+PROCEDURE AcceptCharity(c_id IN NUMBER, c_status IN VARCHAR,c_price IN DECIMAL);
+
+END Admin_Package;
+
+create or replace PACKAGE BODY Admin_Package
+as
+
+PROCEDURE UpdateAdmin(a_id IN NUMBER, pass IN VARCHAR)
+IS
+BEGIN
+UPDATE CHARITY_USER SET  PASSWORD = pass WHERE ID = a_id;
+COMMIT;
+END UpdateAdmin;
+
+PROCEDURE GetNumberOfUsers AS
+
+total_users NUMBER;
+u_all sys_refcursor;
+BEGIN 
+OPEN u_all for
+    SELECT COUNT(*) INTO total_users FROM CHARITY_USER;
+DBMS_SQL.RETURN_RESULT(u_all);
+END GetNumberOfUsers;
+
+PROCEDURE GetAllNotifications As
+n_all sys_refcursor;
+BEGIN 
+OPEN n_all for
+    SELECT *  FROM CHARITY_NOTIFICATION;
+DBMS_SQL.RETURN_RESULT(n_all);
+END GetAllNotifications;
+
+PROCEDURE GetAllDonations AS
+    d_all sys_refcursor;
+BEGIN
+    OPEN d_all FOR
+        SELECT
+            cd.Id,
+            cd.amount,
+            cd.Donationdate,
+            cd.status,
+            cu.username AS username,
+            c.charityname AS charityname
+        FROM Charity_Donation cd
+        JOIN Charity_user cu ON cd.Userid = cu.Id
+        JOIN Charity c ON cd.Charityid = c.Id;
+    
+    DBMS_SQL.RETURN_RESULT(d_all);
+END GetAllDonations;
+
+PROCEDURE FindCategoryWithMaxCharities
+AS
+    v_max_count NUMBER;
+    v_max_category_id NUMBER;
+    c_max SYS_REFCURSOR;
+BEGIN
+    SELECT MAX(cnt) INTO v_max_count
+    FROM (
+        SELECT COUNT(ch.id) AS cnt
+        FROM Charity ch
+        INNER JOIN Charity_category c ON c.id = ch.categoryId
+        GROUP BY ch.categoryId
+    );
+
+    OPEN c_max FOR
+        SELECT c.id AS CategoryId, c.categoryname, COUNT(ch.id) AS CharityCount
+        FROM Charity ch
+        INNER JOIN Charity_category c ON c.id = ch.categoryId
+        GROUP BY c.id, c.categoryname
+        HAVING COUNT(ch.id) = v_max_count;
+
+    DBMS_SQL.RETURN_RESULT(c_max);
+END FindCategoryWithMaxCharities;
+
+
+ PROCEDURE GetNumberOfCharities 
+AS
+total_Charity NUMBER;
+ch_all sys_refcursor;
+BEGIN 
+OPEN ch_all for
+    SELECT COUNT(*) INTO total_Charity FROM  Charity;
+DBMS_SQL.RETURN_RESULT(ch_all);
+END GetNumberOfCharities;
+
+ PROCEDURE GetNumberOfNotifications
+AS
+total_Notifications NUMBER;
+n_all sys_refcursor;
+BEGIN 
+OPEN n_all for
+    SELECT COUNT(*) INTO total_Notifications FROM CHARITY_NOTIFICATION;
+DBMS_SQL.RETURN_RESULT(n_all);
+END GetNumberOfNotifications;
+
+
+PROCEDURE SerchBetweenDates( DateFrom in date , DateTo in date)
+As
+Get_date SYS_REFCURSOR;
+Begin
+open
+Get_date for
+select *from Charity   
+WHERE CREATEDDATE BETWEEN DateFrom AND DateTo;
+DBMS_SQL.RETURN_RESULT(Get_date);
+END SerchBetweenDates;
+
+PROCEDURE Reports AS
+    r_all sys_refcursor;
+BEGIN
+    OPEN r_all FOR
+    SELECT
+        ch.Charityname,
+        ch.mission,
+        ch.image,
+        cu.Username AS benefactor
+
+    FROM
+         Charity ch
+    LEFT JOIN
+        Charity_Donation cd ON cd.Charityid = ch.id
+    LEFT JOIN
+        Charity_user cu ON cd.Userid = cu.Id;
+ 
+    DBMS_SQL.RETURN_RESULT(r_all);
+END Reports;
+
+PROCEDURE AcceptCharity(c_id IN NUMBER, c_status IN VARCHAR,c_price IN DECIMAL)
+IS
+u_id number ;
+
+BEGIN
+select userid into  u_id from Charity  WHERE ID = c_id ;
+
+        IF c_status = 'Accepted' THEN
+
+           UPDATE Charity SET  STATUS=c_status , price = c_price WHERE ID = c_id;
+           DELETE FROM CHARITY_NOTIFICATION  WHERE userid = u_id;
+           
+          ELSIF c_status = 'Rejected' THEN
+        
+            DELETE FROM Charity WHERE ID = c_id;
+            
+            DELETE FROM CHARITY_NOTIFICATION  WHERE userid = u_id;
+            
+            END IF;
+COMMIT;
+END AcceptCharity;
+
+
+PROCEDURE ReportsInterval ( p_start_date IN DATE,  p_end_date IN DATE) AS
+    r_all sys_refcursor;
+BEGIN
+    OPEN r_all FOR
+    SELECT
+        ch.Charityname,
+        ch.mission,
+        ch.image,
+        cu.Username AS benefactor
+    FROM
+        Charity ch
+    LEFT JOIN
+        Charity_Donation cd ON cd.Charityid = ch.id
+    LEFT JOIN
+        Charity_user cu ON cd.Userid = cu.Id
+    WHERE
+        cd.donationdate >= p_start_date AND cd.donationdate <= p_end_date ;
+
+    DBMS_SQL.RETURN_RESULT(r_all);
+END ReportsInterval;
+
+PROCEDURE benefits
+ AS
+    r_all sys_refcursor;
+BEGIN
+    OPEN r_all FOR
+    SELECT
+    
+        SUM(cd.amount) AS TotalDonations,
+        SUM(ch.Price)AS Profit
+    FROM
+         Charity ch
+    LEFT JOIN
+        Charity_Donation cd ON cd.Charityid = ch.id;
+
+    DBMS_SQL.RETURN_RESULT(r_all);
+END benefits;
+
+End Admin_Package;
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Donar_Package
+
+
+
+CREATE OR REPLACE PACKAGE Donar_Package AS
+PROCEDURE GetUserById(u_id IN NUMBER);
+PROCEDURE UpdateUser(u_id IN NUMBER, pass IN VARCHAR, u_image IN VARCHAR);
+PROCEDURE GetUserNotifications ( u_id IN NUMBER);
+PROCEDURE GetNumberOfUserNotifications( u_id IN NUMBER);
+PROCEDURE PayForCharity(u_id IN NUMBER,c_id IN NUMBER,p_cardholdername IN VARCHAR2, p_cardnumber IN VARCHAR2, p_expirationdate IN VARCHAR2,p_cvv IN VARCHAR2);
+PROCEDURE DonateForCharity(u_id IN NUMBER,c_id IN NUMBER,c_t_price IN OUT decimal,p_cardholdername IN VARCHAR2, p_cardnumber IN VARCHAR2, p_expirationdate IN VARCHAR2,p_cvv IN VARCHAR2);
+PROCEDURE GetDonationByUserId(u_id IN NUMBER);
+
+END Donar_Package;
+
+create or replace PACKAGE BODY Donar_Package
+as
+PROCEDURE GetUserById(u_id IN NUMBER)
+AS
+u_all sys_refcursor;
+BEGIN
+OPEN u_all FOR
+SELECT * FROM CHARITY_USER WHERE ID = u_id;
+DBMS_SQL.RETURN_RESULT(u_all);
+END GetUserById;
+
+PROCEDURE UpdateUser(u_id IN NUMBER, pass IN VARCHAR , u_image IN VARCHAR)
+IS
+BEGIN
+UPDATE CHARITY_USER SET  PASSWORD = pass , Image =u_image
+
+WHERE ID = u_id  ;
+COMMIT;
+END UpdateUser;
+
+
+PROCEDURE GetUserNotifications ( u_id IN NUMBER) As
+n_all sys_refcursor;
+BEGIN 
+OPEN n_all for
+    SELECT *  FROM CHARITY_NOTIFICATION  
+    WHERE Userid = u_id;
+ 
+DBMS_SQL.RETURN_RESULT(n_all);
+END GetUserNotifications;
+
+
+ PROCEDURE GetNumberOfUserNotifications( u_id IN NUMBER) AS
+total_Notifications NUMBER;
+n_all sys_refcursor;
+BEGIN 
+OPEN n_all for
+    SELECT COUNT(*) INTO total_Notifications FROM CHARITY_NOTIFICATION
+    WHERE Userid = u_id;
+
+DBMS_SQL.RETURN_RESULT(n_all);
+END GetNumberOfUserNotifications;
+
+PROCEDURE PayForCharity(u_id IN NUMBER,c_id IN NUMBER,p_cardholdername IN VARCHAR2, p_cardnumber IN VARCHAR2, p_expirationdate IN VARCHAR2,p_cvv IN VARCHAR2)
+ AS
+    v_price DECIMAL(10, 2);
+    v_card_BALANCE DECIMAL(10, 2);
+    v_current_date DATE;
+    v_card_expiration_date DATE;
+    v_email VARCHAR(255);
+
+BEGIN
+
+    SELECT price INTO v_price
+    FROM Charity
+    WHERE id = c_id;
+     SELECT email INTO v_email
+    FROM Charity_user
+    WHERE id = u_id;
+
+  SELECT BALANCE, TO_DATE(p_expirationdate, 'MM/YY') INTO v_card_BALANCE, v_card_expiration_date
+    FROM Charity_Visa_Card
+    WHERE CARDHOLDERNUMBER = p_cardholdername
+        AND CardNumber = p_cardnumber
+        AND Cvv = p_cvv;
+
+    v_current_date := SYSDATE;
+
+    IF v_card_expiration_date < v_current_date THEN
+        UPDATE Charity SET Status = 'Not Paid' WHERE userid = u_id;
+    END IF;
+
+
+    IF v_card_BALANCE >= v_price THEN
+        v_card_BALANCE := v_card_BALANCE - v_price;
+
+        UPDATE Charity_Visa_Card
+        SET BALANCE = v_card_BALANCE
+        WHERE CARDHOLDERNUMBER = p_cardholdername
+            AND CardNumber = p_cardnumber
+            AND ExpirationDate = p_expirationdate
+            AND Cvv = p_cvv;
+
+        UPDATE Charity SET Status = 'Paid'
+        WHERE userid = u_id;
+      
+    ELSE
+        UPDATE Charity SET Status = 'Not Paid'   WHERE userid = u_id;
+        
+    END IF;
+
+END PayForCharity;
+
+PROCEDURE DonateForCharity(
+    u_id IN NUMBER,
+    c_id IN NUMBER,
+    c_t_price IN OUT DECIMAL,
+    p_cardholdername IN VARCHAR2,
+    p_cardnumber IN VARCHAR2,
+    p_expirationdate IN VARCHAR2,
+    p_cvv IN VARCHAR2
+) AS
+    v_goal_price DECIMAL(10, 2);
+    v_total_price DECIMAL(10, 2);
+    v_card_BALANCE DECIMAL(10, 2);
+    v_current_date DATE;
+BEGIN
+
+    SELECT GoalPrice INTO v_goal_price
+    FROM Charity
+    WHERE Id = c_id;
+    
+  SELECT TOTALPRICE INTO v_total_price
+    FROM Charity
+    WHERE Id = c_id;
+    SELECT BALANCE INTO v_card_BALANCE
+    FROM Charity_Visa_Card
+    WHERE CARDHOLDERNUMBER = p_cardholdername
+        AND CardNumber = p_cardnumber
+        AND ExpirationDate = p_expirationdate
+        AND Cvv = p_cvv;
+
+    v_current_date := SYSDATE;
+
+   IF v_goal_price <= v_total_price + c_t_price THEN
+                UPDATE Charity SET Status = 'Achieved' WHERE Id = c_id;
+
+        v_card_BALANCE := v_card_BALANCE - c_t_price;
+            UPDATE Charity SET TOTALPRICE = TOTALPRICE + c_t_price WHERE Id = c_id;
+
+    ELSE
+v_card_BALANCE := v_card_BALANCE - c_t_price;
+            UPDATE Charity SET TOTALPRICE = TOTALPRICE + c_t_price WHERE Id = c_id;
+            
+            END IF;
+
+
+    UPDATE Charity_Visa_Card
+    SET BALANCE = v_card_BALANCE
+    WHERE CARDHOLDERNUMBER = p_cardholdername
+        AND CardNumber = p_cardnumber
+        AND ExpirationDate = p_expirationdate
+        AND Cvv = p_cvv;
+
+    INSERT INTO Charity_Donation (UserId, CHARITYID, Status, DonationDate, amount)
+    VALUES (u_id, c_id, 'Succeed', SYSDATE, c_t_price);
+
+    COMMIT;
+END DonateForCharity;
+
+
+PROCEDURE GetDonationByUserId(u_id IN NUMBER)
+AS
+d_all sys_refcursor;
+BEGIN
+OPEN d_all FOR
+   SELECT
+            cd.Id,
+            cd.amount,
+            cd.Donationdate,
+            cd.status,
+            cu.username AS username,
+            c.charityname AS charityname
+        FROM Charity_Donation cd
+        JOIN Charity_user cu ON cd.Userid = cu.Id
+        JOIN Charity c ON cd.Charityid = c.Id
+        WHERE cd.USERID = u_id;
+DBMS_SQL.RETURN_RESULT(d_all);
+END GetDonationByUserId;
+
+
+End Donar_Package;
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Auth_Package
+
+
+CREATE OR REPLACE PACKAGE Auth_Package AS
+PROCEDURE Register(u_name IN VARCHAR, u_email IN VARCHAR, pass IN VARCHAR, u_image IN VARCHAR);
+PROCEDURE UserLogin(Uname IN VARCHAR2, pass IN VARCHAR2) ;
+PROCEDURE Forgotpassword(u_email IN VARCHAR2, v_verification_code IN VARCHAR2);
+PROCEDURE ResetPassword( p_verification_code IN VARCHAR2,p_new_password IN VARCHAR2);
+
+END Auth_Package;
+
+create or replace PACKAGE BODY Auth_Package
+As
+
+PROCEDURE Register(u_name IN VARCHAR, u_email IN VARCHAR, pass IN VARCHAR, u_image IN VARCHAR)
+IS
+v_user_count VARCHAR(255);
+u_roleid NUMBER;
+BEGIN 
+
+u_roleid := 2;
+
+    SELECT COUNT(*) INTO v_user_count
+    FROM CHARITY_USER
+    WHERE username = u_name;
+
+   
+
+    SELECT COUNT(*) INTO v_user_count
+    FROM CHARITY_USER
+    WHERE email = u_email;
+  
+INSERT INTO CHARITY_USER (username, EMAIL, PASSWORD, image, ROLEID)
+VALUES(u_name,u_email,pass, u_image,u_roleid);
+COMMIT;
+END Register;
+
+  PROCEDURE UserLogin(Uname IN VARCHAR2, pass IN VARCHAR2) AS
+        v_user_count NUMBER;
+        u_login SYS_REFCURSOR;
+    BEGIN
+        SELECT COUNT(*) INTO v_user_count
+        FROM CHARITY_USER
+        WHERE USERNAME = Uname AND PASSWORD = pass;
+
+
+        OPEN u_login FOR
+            SELECT USERNAME, ROLEID ,id
+            FROM CHARITY_USER
+            WHERE USERNAME = Uname AND PASSWORD = pass;
+        DBMS_SQL.RETURN_RESULT(u_login);
+    END UserLogin;
+
+ PROCEDURE Forgotpassword(u_email IN VARCHAR2, v_verification_code IN VARCHAR2 )
+AS
+    v_user_id number;
+BEGIN
+    SELECT ID INTO v_user_id FROM CHARITY_USER WHERE Email = u_email;
+
+    UPDATE CHARITY_USER
+    SET VERIFICATIONCODE = v_verification_code  WHERE ID = v_user_id;
+
+    COMMIT;
+
+END Forgotpassword;
+
+PROCEDURE ResetPassword( p_verification_code IN VARCHAR2,p_new_password IN VARCHAR2)
+AS
+    v_user_id NUMBER;
+ 
+BEGIN
+        SELECT ID INTO v_user_id FROM CHARITY_USER WHERE VerificationCode = p_verification_code;
+
+    UPDATE CHARITY_USER SET Password= p_new_password, VerificationCode = NULL WHERE ID = v_user_id;
+
+    COMMIT;
+
+END ResetPassword;
+
+
+End Auth_Package ;
+
+
+
+
+
+
+
+
+
